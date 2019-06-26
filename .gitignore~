@@ -1,0 +1,4 @@
+./data/
+*.npz
+./spark-warehouse/
+*.csv
