@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+"""
+USAGE: python ETL_multiple.py 
+"""
+
 import glob, os
 import numpy as np
 import pandas as pd
@@ -19,15 +23,17 @@ from pyspark.sql.window import Window
 from pyspark.sql import functions as F
 from pyspark.sql.types import StructType, StructField, IntegerType, TimestampType, BooleanType, StringType
 import ETL_tools as tools
+from datetime import datetime
 
 #Settings
 LBWs = [2335, 10000]
-filedir = 'temp'
+filedir = 'test'
 #streamno = 0
 maxcount = 600
 
 #df_comb = pd.DataFrame(columns=['filename', 'l', ])
 with open('outdata/aggs.csv', 'w') as f:
+    t0 = datetime.now()
     f.write('filename,LBW,stream,l_mode,gin_mode,gack_mode,l_median,gin_median,gack_median')
     f.write('\n')
     for LBW in LBWs:
@@ -52,6 +58,8 @@ with open('outdata/aggs.csv', 'w') as f:
                     l_median, gin_median, gack_median = tools.get_medians(pdfv)
                     f.write('{},{},{},{},{},{},{},{},{}'.format(filename,LBW,streamno,l_mode,gin_mode,gack_mode,l_median,gin_median,gack_median))
                     f.write('\n')
+                t1 = datetime.now()
+                print(filename, ' took ', (t1-t0).total_seconds(), ' seconds')
                     # plt.plot(pdfv.seqlength/pdfv.gin, pdfv.gack/pdfv.gin, 'o', label=streamno)
                     # plt.plot(l_mode/gin_mode, gackn_mode/ginn_mode, '*k')
                     # plt.plot(l_median/gin_median, gack_median/gin_median, '*y')
@@ -65,4 +73,6 @@ with open('outdata/aggs.csv', 'w') as f:
     else:
         print('Loading the already mangled data...')
 #        df_all = spark.read.parquet(os.path.join(filedir, 'shifted_{}.parquet'.format(LBW)))
+t2 = datetime.now()
+print('All processings took ', (t2-t0).total_seconds(), ' seconds')
 f.close()

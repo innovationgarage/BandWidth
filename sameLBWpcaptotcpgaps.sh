@@ -3,12 +3,12 @@ input=$1
 outdir=$2
 while IFS= read -r line
 do
-    echo "$line"
     basedir=`basename "$line"`
-    rsync root@ymslanda-ext.innovationgarage.tech:/ymslanda/bandwidthestimator/data/"$line"/dumpfile "$outdir"dumpfile
-    rsync root@ymslanda-ext.innovationgarage.tech:/ymslanda/bandwidthestimator/data/"$line"/interfaces "$outdir"interfaces
-    newname=$(echo dumpfile_"$basedir".npz | tr , _)
-    echo $newname
-    python pcaptotcpgaps.py "$outdir"dumpfile "$outdir$newname" "$outdir"interfaces
+    for dumpfile in "$line"/dumpfile*; do
+	basename=`basename "$dumpfile"`
+	newname=$(echo "$basename"_"$basedir".npz | tr , _)
+	echo NN:$newname
+	python pcaptotcpgaps.py "$dumpfile" "$outdir$newname" "$line"/interfaces
+    done
 done < "$input"
     

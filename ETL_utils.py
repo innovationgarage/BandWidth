@@ -51,7 +51,7 @@ def shift_windows(df):
     df['gack'] = (df.timestamp_y.shift(periods=-1) - df.timestamp_y)
 
     df = df[(df.seqlength>0) & (df.gin>0) & (df.gack>0)]
-    return df_shifted
+    return df
 
 # def shift_windows(df, streamno):
 #     shift_window = Window.partitionBy().orderBy('timestamp')
