@@ -15,9 +15,9 @@ def read_npz_to_csv(dumpfile):
         print("Converting " +  base + " to CSV...")
         pd_df = pd.DataFrame(data=data)
         pd_df.drop(columns=['src', 'dst', 'src_port', 'dst_port'], inplace=True)
-        pd_df['linkbw'] = base.split('_')[1]
-        pd_df['nflow'] = base.split('_')[2]
-        pd_df['flowbw'] = base.split('_')[3]
+#        pd_df['linkbw'] = base.split('_')[1]
+#        pd_df['nflow'] = base.split('_')[2]
+#        pd_df['flowbw'] = base.split('_')[3]
         pd_df.to_csv(filepath, index=False)
     else:
         print(filepath + " already exists")
@@ -31,9 +31,9 @@ def read_npz(dumpfile):
     dirname = os.path.dirname(dumpfile)
     df = pd.DataFrame(data=data)
     df.drop(columns=['src', 'dst', 'src_port', 'dst_port'], inplace=True)
-    df['linkbw'] = base.split('_')[1]
-    df['nflow'] = base.split('_')[2]
-    df['flowbw'] = base.split('_')[3]
+#    df['linkbw'] = base.split('_')[1]
+#    df['nflow'] = base.split('_')[2]
+#    df['flowbw'] = base.split('_')[3]
     return df
         
 def find_ack_for_seq(df):
