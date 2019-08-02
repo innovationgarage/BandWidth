@@ -12,9 +12,7 @@ from datetime import datetime
 
 def process(dumpfile, outfile, tempdir):
     with open(outfile, 'w') as f:
-#        print(outfile)
-        base = os.path.basename(args.dumpfile)
-        print('BASEXXXXXXX', base)
+        base = os.path.basename(dumpfile)
         filename = os.path.splitext(base)[0]
         LBW = base.split('_')[1]
         NFlow = base.split('_')[2]
@@ -22,7 +20,7 @@ def process(dumpfile, outfile, tempdir):
         f.write('filename,LBW,stream,l_mode,gin_mode,gack_mode,l_median,gin_median,gack_median')
         f.write('\n')
         t0 = datetime.now()
-        df = tools.read_npz(args.dumpfile)
+        df = tools.read_npz(dumpfile)
         t1 = datetime.now()
 #        print('tools.read_npz ', (t1-t0).total_seconds())
         df_joined = tools.find_ack_for_seq(df)
