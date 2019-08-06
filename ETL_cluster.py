@@ -18,9 +18,14 @@ def process(dumpfile, outfile, tempdir):
 #        print('BASEXXXXXXXXXXXXXXXXX', base)
         filename = os.path.splitext(base)[0]
 #        print(filename)
-        LBW = base.split('_')[0]
-        NFlow = base.split('_')[1]
-        FlowBW = base.split('_')[2]
+        try:
+            LBW = base.split('_')[0]
+            NFlow = base.split('_')[1]
+            FlowBW = base.split('_')[2]
+        except:
+            LBW = None
+            NFlow = None
+            FlowBW = None
         f.write('filename,LBW,stream,l_mode,gin_mode,gack_mode,l_median,gin_median,gack_median')
         f.write('\n')
         t0 = datetime.now()
@@ -31,12 +36,12 @@ def process(dumpfile, outfile, tempdir):
         t2 = datetime.now()
 #        print('tools.find_ack_for_seq', (t2-t1).total_seconds())
         for streamno in df.stream.unique():
-            print('STREAM', streamno)
+#            print('STREAM', streamno)
             tin = datetime.now()
             df_shifted = tools.shift_windows(df_joined[df_joined.stream==streamno]).reset_index(drop=True)
             tout = datetime.now()
 #            print('tools.shift_windows', (tout-tin).total_seconds())
-            df_shifted.to_csv(os.path.join(tempdir, 'shifted_{}.csv'.format(filename)), index=False)
+#            df_shifted.to_csv(os.path.join(tempdir, 'shifted_{}.csv'.format(filename)), index=False)
             if df_shifted.shape[0]!=0:
                 l_mode, gin_mode, gack_mode = tools.get_modes(df_shifted)
                 l_median, gin_median, gack_median = tools.get_medians(df_shifted)
@@ -56,13 +61,27 @@ if __name__ == "__main__":
     
     #outfile = os.path.join(args.outpath, os.path.splitext(os.path.basename(args.dumpfile))[0]+'.csv')
     dumpfile = sys.argv[1]
+    
+    tempdir = 'temps/'
+    outbase = 'outdata/'
 
     base = os.path.basename(os.path.dirname(dumpfile))
     base = base.replace(',', '_')
+    LBW = base.split('_')[0]
+    outpath = os.path.join(outbase, LBW[0])
 
-    tempdir = 'temps/'
-    outpath = 'outdata/'
-    
     outfile = os.path.join(outpath, os.path.basename(dumpfile).split('.npz')[0]+'_'+base+'_aggs.csv')
-    print('OUTFILE:', outfile)
-    process(dumpfile, outfile, tempdir)
+
+        
+    # if os.path.exists(outfile) and :
+    #     print(dumpfile, outfile)
+    # else:
+    #     print('BOOOOOO', dumpfile)
+
+    if ('.npz' in dumpfile):        
+        if os.path.exists(outfile):
+            print('{} already exists!'.format(outfile))
+        else:
+            process(dumpfile, outfile, tempdir)
+    else:
+        pass
