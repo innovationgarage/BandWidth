@@ -26,8 +26,6 @@ def fit_piecewise(df_lbw, outname):
 dfs = []
 for lbw in df.LBW.unique():
     df_lbw = df[df.LBW==lbw]
-    df_lbw['l_over_gin'] = df_lbw['l_mode']/df_lbw['gin_mode']
-    df_lbw['gack_over_gin'] = df_lbw['gack_mode']/df_lbw['gin_mode']
     print(lbw, df_lbw.l_mode.nunique())
     dfs.append(df_lbw)
     fit_piecewise(df_lbw, lbw)
