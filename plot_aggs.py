@@ -20,7 +20,7 @@ def fit_piecewise(df_lbw, outname):
     plt.plot(xd, piecewise_linear(xd, *p))
     LBW = df_lbw.LBW.unique()[0]
     cross_traffic = ((df_lbw.nflow.unique()[0]-1)*df_lbw.flowbw.unique()[0])
-    plt.title('LinkBW:{}'. format(lbw))
+    plt.title('LinkBW:{}'. format(outname))
     plt.savefig(os.path.join('plots', '{}.png'.format(outname)))
     
 dfs = []
@@ -30,21 +30,23 @@ for lbw in df.LBW.unique():
     dfs.append(df_lbw)
     fit_piecewise(df_lbw, lbw)
     
+plt.plot(df.l_over_gin, df.gack_over_gin, 'o')
+plt.show()
 
-# fig, axs = plt.subplots(df.LBW.nunique(), 1, figsize=(15,15))
-# axs = axs.flatten()
-# for i, dflbw in enumerate(dfs):
-#     axs[i].plot(dflbw.l_over_gin,
-#                 dflbw.gack_over_gin,
-#                 '.',
-#                 label=dflbw.LBW.unique()[0])
-#     axs[i].legend(loc='upper right')
-#     axs[i].set_ylim(0, 10)
-#     if i==df.LBW.nunique()//2:
-#         axs[i].set_ylabel('gack_mode/gin_mode')
-# axs[i].set_xlabel('l_mode/gin_mode')
-# plt.savefig('all_data.png')
+fig, axs = plt.subplots(df.LBW.nunique(), 1, figsize=(15,15))
+axs = axs.flatten()
+for i, dflbw in enumerate(dfs):
+    axs[i].plot(dflbw.l_over_gin,
+                dflbw.gack_over_gin,
+                '.',
+                label=dflbw.LBW.unique()[0])
+    axs[i].legend(loc='upper right')
+    axs[i].set_ylim(0, 10)
+    if i==df.LBW.nunique()//2:
+        axs[i].set_ylabel('gack_mode/gin_mode')
+axs[i].set_xlabel('l_mode/gin_mode')
+#plt.savefig('all_data.png')
 
-#plt.show()
+plt.show()
 
 
